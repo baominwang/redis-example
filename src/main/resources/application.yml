@@ -4,3 +4,14 @@ spring:
     username: dbadmin
     password: admin123
     type: com.zaxxer.hikari.HikariDataSource
+  redis:
+    host: 10.0.1.252
+    port: 6379
+    database: 1
+    timeout: 10000ms
+    lettuce:
+      pool:
+        max-active: 100
+        max-wait: 10000ms
+        max-idle: 20
+        min-idle: 5
