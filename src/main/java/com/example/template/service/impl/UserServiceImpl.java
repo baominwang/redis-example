@@ -17,6 +17,7 @@ import org.springframework.data.redis.connection.stream.StreamRecords;
 import org.springframework.data.redis.connection.stream.StringRecord;
 import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
@@ -31,7 +32,7 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Autowired
-    private RedisTemplate<String, Object> redisTemplate;
+    private StringRedisTemplate stringRedisTemplate;
 
     @Override
     public String create(CreateUserRequest request) {
@@ -41,19 +42,12 @@ public class UserServiceImpl implements UserService {
         user.setUserId(userId);
 
         // store the user record into the Redis
-        ValueOperations<String, Object> ops = redisTemplate.opsForValue();
+        ValueOperations<String, String> ops = stringRedisTemplate.opsForValue();
         String key = "user:" + userId;
         String value = request.getFirstName() + " " + request.getLastName();
         ops.set(key, value);
         String storedValue = (String)ops.get(key);
         log.info("The value for key: {} is {}", key, storedValue);
-
-        // record the operation in the log
-        Map<String, String> content = new HashMap<>();
-        content.put("timestamp", new Date().toString());
-        content.put("userId", userId);
-        StringRecord record = StreamRecords.string(content).withStreamKey("users:audit");
-        RecordId recordId = redisTemplate.opsForStream().add(record);
 
         // persist the user
         userRepository.save(user);

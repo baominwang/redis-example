@@ -53,7 +53,7 @@ public class RedisTestImpl {
             }
         });
         List<Thread> threads = new ArrayList<>();
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 10; i++) {
             Thread thread = new Thread(runable, "thread-" + (i + 1));
             thread.start();
             threads.add(thread);
