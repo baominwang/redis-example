@@ -19,4 +19,9 @@ public class RedisController {
         boolean result = redisService.verifyScript("failed", "ok");
         log.info("Result is {}", result);
     }
+
+    @PostMapping(value = "/actions/verify_support_collections")
+    public void verifySupportCollections() {
+        redisService.verifySupportCollections();
+    }
 }
