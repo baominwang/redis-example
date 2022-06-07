@@ -2,11 +2,16 @@ package com.example.template.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.script.DefaultRedisScript;
+import org.springframework.data.redis.core.script.RedisScript;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+import org.springframework.scripting.ScriptSource;
+import org.springframework.scripting.support.ResourceScriptSource;
 
 @Configuration
 public class RedisConfig {
@@ -31,5 +36,14 @@ public class RedisConfig {
         stringRedisTemplate.setConnectionFactory(lettuceConnectionFactory);
 
         return stringRedisTemplate;
+    }
+
+    @Bean
+    public RedisScript<Boolean> checkAndSetScript() {
+        DefaultRedisScript<Boolean> redisScript = new DefaultRedisScript<Boolean>();
+        ScriptSource scriptSource = new ResourceScriptSource(new ClassPathResource("scripts/checkandset.lua"));
+        redisScript.setScriptSource(scriptSource);
+        redisScript.setResultType(Boolean.class);
+        return redisScript;
     }
 }

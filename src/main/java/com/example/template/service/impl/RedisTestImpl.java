@@ -66,4 +66,6 @@ public class RedisTestImpl {
         String value = (String) redisTemplate.opsForValue().get(key);
         log.info("The result is {}", value);
     }
+
+
 }
