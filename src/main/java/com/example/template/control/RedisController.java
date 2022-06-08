@@ -14,6 +14,16 @@ public class RedisController {
     @Autowired
     private RedisService redisService;
 
+    @PostMapping(value = "/actions/test_value_operations")
+    public void testValueOperationsScript() {
+        redisService.testValueOperations();
+    }
+
+    @PostMapping(value = "/actions/test_hash_operations")
+    public void testHashOperationsScript() {
+        redisService.testHashOperations();
+    }
+
     @PostMapping(value = "/actions/verify_script")
     public void verifyScript() {
         boolean result = redisService.verifyScript("failed", "ok");
