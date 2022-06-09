@@ -2,6 +2,7 @@ package com.example.template.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -17,15 +18,16 @@ import java.util.List;
 @Slf4j
 public class RedisTestImpl {
     @Autowired
-    private RedisTemplate<String, Object> redisTemplate;
+    @Qualifier("normalRedisTemplate")
+    private RedisTemplate<String, Object> normalRedisTemplate;
 
     @PostConstruct
     public void init() throws Exception {
         String key = "multiThreadTest";
 
-        redisTemplate.delete(key);
+        normalRedisTemplate.delete(key);
 
-        Runnable runable = () -> redisTemplate.execute(new SessionCallback<List<Object>>() {
+        Runnable runable = () -> normalRedisTemplate.execute(new SessionCallback<List<Object>>() {
             @Override
             @SuppressWarnings({"unchecked"})
             public List<Object> execute(RedisOperations operations) throws DataAccessException {
@@ -63,9 +65,7 @@ public class RedisTestImpl {
             thread.join();
         }
 
-        String value = (String) redisTemplate.opsForValue().get(key);
+        String value = (String) normalRedisTemplate.opsForValue().get(key);
         log.info("The result is {}", value);
     }
-
-
 }

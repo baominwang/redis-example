@@ -15,8 +15,8 @@ import org.springframework.scripting.support.ResourceScriptSource;
 
 @Configuration
 public class RedisConfig {
-    @Bean
-    public RedisTemplate<String, Object> redisTemplate(LettuceConnectionFactory lettuceConnectionFactory) {
+    @Bean(name = "normalRedisTemplate")
+    public RedisTemplate<String, Object> normalRedisTemplate(LettuceConnectionFactory lettuceConnectionFactory) {
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setKeySerializer(new StringRedisSerializer());
         redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer());
@@ -26,6 +26,13 @@ public class RedisConfig {
 
         redisTemplate.setConnectionFactory(lettuceConnectionFactory);
 
+        return redisTemplate;
+    }
+
+    @Bean(name = "repositoryRedisTemplate")
+    public RedisTemplate<?, ?> repositoryRedisTemplate(LettuceConnectionFactory lettuceConnectionFactory) {
+        RedisTemplate<byte[], byte[]> redisTemplate = new RedisTemplate<>();
+        redisTemplate.setConnectionFactory(lettuceConnectionFactory);
         return redisTemplate;
     }
 

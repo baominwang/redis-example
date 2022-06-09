@@ -3,6 +3,7 @@ package com.example.template.service.impl;
 import com.example.template.service.RedisService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -19,7 +20,8 @@ import java.util.Set;
 @Slf4j
 public class RedisServiceImpl implements RedisService {
     @Autowired
-    private RedisTemplate<String, Object> redisTemplate;
+    @Qualifier("normalRedisTemplate")
+    private RedisTemplate<String, Object> normalRedisTemplate;
 
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
@@ -41,7 +43,7 @@ public class RedisServiceImpl implements RedisService {
 
     @Override
     public void testHashOperations() {
-        HashOperations<String, String, Object> operations = redisTemplate.opsForHash();
+        HashOperations<String, String, Object> operations = normalRedisTemplate.opsForHash();
         operations.put("operations:hash:key1", "name", "Benjamin Wang");
         operations.put("operations:hash:key1", "age", 40);
 
