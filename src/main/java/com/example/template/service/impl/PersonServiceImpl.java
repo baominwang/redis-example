@@ -3,12 +3,15 @@ package com.example.template.service.impl;
 import cn.hutool.core.util.IdUtil;
 import com.example.template.domain.Person;
 import com.example.template.dto.CreatePersonRequest;
+import com.example.template.dto.DescribePersonRequest;
 import com.example.template.mapper.PersonMapper;
 import com.example.template.repository.PersonRepository;
 import com.example.template.service.PersonService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -26,5 +29,10 @@ public class PersonServiceImpl implements PersonService {
         log.info("Person: {} is persisted", id);
 
         return id;
+    }
+
+    @Override
+    public Optional<Person> describe(DescribePersonRequest request) {
+        return personRepository.findByFirstname(request.getFirstname());
     }
 }
